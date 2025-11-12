@@ -194,7 +194,7 @@ async function initFaculty() {
   }
 
   document.getElementById("welcome").innerHTML =
-    `Welcome <b>${facultyName}</b> — Venue: <b>${venue}</b> — Batch: <b>${batch}</b>`;
+    `🙏Welcome <b>${facultyName}</b> — 🏫Venue: <b>${venue}</b> — ⏳Batch: <b>${batch}</b>`;
 
   const lockData = await postData("getLockStatus", { batch });
   locked = (lockData.status === "Closed");
