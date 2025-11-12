@@ -47,8 +47,9 @@
       border: 1px solid #ccc;
     }
 
+    /* --- Default Button --- */
     button {
-      background: #28a745;
+      background: #dc3545; /* red before save */
       color: white;
       border: none;
       cursor: pointer;
@@ -57,15 +58,16 @@
     }
 
     button:hover:not(:disabled) {
-      background: #28a745;
       transform: scale(1.05);
+      opacity: 0.9;
     }
 
     button:disabled {
-      background: #28a745;
+      background: gray;
       cursor: not-allowed;
     }
 
+    /* --- Table Styling --- */
     table {
       border-collapse: collapse;
       width: 100%;
@@ -129,6 +131,10 @@
         width: 100%;
         border-radius: 10px;
         margin-top: 10px;
+      }
+
+      .total {
+        font-size: 18px;
       }
     }
 
@@ -249,13 +255,13 @@ function createRow(team_id, student_id, student_name, dept, title) {
 
   row.innerHTML = `
     <td data-label="Team ID">${team_id}</td>
-    <td data-label="Student Name"><i class="bi bi-person-circle"></i> ${student_name}</td>
+    <td data-label="Student Name"><i class="bi bi-person-circle text-primary"></i> ${student_name}</td>
     <td data-label="Department">${dept}</td>
-    <td data-label="Title"><i class="bi bi-cpu"></i> ${title}</td>
-    ${Array(4).fill('<td data-label="Level I"><select class="lvl1 form-select form-select-sm"><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option></select></td>').join('')}
-    ${Array(2).fill('<td data-label="Level II"><select class="lvl2 form-select form-select-sm"><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option></select></td>').join('')}
+    <td data-label="Title"><i class="bi bi-cpu text-success"></i> ${title}</td>
+    ${Array(4).fill('<td data-label="Level I Criteria"><select class="lvl1 form-select form-select-sm"><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option></select></td>').join('')}
+    ${Array(2).fill('<td data-label="Level II Criteria"><select class="lvl2 form-select form-select-sm"><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option></select></td>').join('')}
     <td data-label="Total"><span class="badge bg-success total fs-6">0</span></td>
-    <td data-label="Action"><button class="btn"><i class="bi bi-save2"></i> Save</button></td>
+    <td data-label="Action"><button class="btn"><i class="bi bi-save2-fill"></i> Save</button></td>
   `;
 
   const btn = row.querySelector("button");
@@ -272,7 +278,7 @@ function createRow(team_id, student_id, student_name, dept, title) {
 
   updateTotal(row);
   if (locked) btn.disabled = true;
-  else btn.onclick = () => saveMarks(row, team_id, student_id);
+  else btn.onclick = () => saveMarks(row, team_id, student_id, btn);
 
   selects.forEach(s => s.addEventListener("change", () => updateTotal(row)));
   return row;
@@ -289,7 +295,7 @@ function updateTotal(row) {
   row.querySelector(".total").textContent = l1.reduce((a,b)=>a+b,0) + l2.reduce((a,b)=>a+b,0);
 }
 
-async function saveMarks(row, team_id, student_id) {
+async function saveMarks(row, team_id, student_id, btn) {
   const l1 = Array.from(row.querySelectorAll(".lvl1")).map(s=>level1Marks[s.value]);
   const l2 = Array.from(row.querySelectorAll(".lvl2")).map(s=>level2Marks[s.value]);
   const total = l1.reduce((a,b)=>a+b,0) + l2.reduce((a,b)=>a+b,0);
@@ -303,11 +309,15 @@ async function saveMarks(row, team_id, student_id) {
     l2_1: l2[0], l2_2: l2[1], total
   });
 
+  // ✅ Button animation and color change
+  btn.style.backgroundColor = "#28a745"; // green after save
+  btn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Saved';
+  btn.style.transition = "all 0.4s ease";
+  btn.style.transform = "scale(1.05)";
+  setTimeout(() => { btn.style.transform = "scale(1)"; }, 300);
+
   alert(`Marks saved for ${student_id} (${batch} batch).`);
 }
 </script>
 </body>
 </html>
-
-
-
