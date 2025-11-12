@@ -48,18 +48,29 @@
     }
 
     button {
-      background: #28a745;
-      color: white;
-      border: none;
-      cursor: pointer;
-      border-radius: 12px;
-      transition: all 0.3s ease;
-    }
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
 
-    button:hover:not(:disabled) {
-      background: #43a047;
-      transform: scale(1.05);
-    }
+button:hover {
+  background-color: #0069d9;
+  transform: scale(1.05);
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+    
 
     button:disabled {
       background: #ccc;
@@ -308,3 +319,4 @@ async function saveMarks(row, team_id, student_id) {
 </script>
 </body>
 </html>
+
