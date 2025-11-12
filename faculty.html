@@ -4,164 +4,27 @@
   <meta charset="UTF-8">
   <title>Faculty - Enter Marks</title>
   <script src="common.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    * { box-sizing: border-box; }
-    body {
-      font-family: 'Poppins', sans-serif;
-      padding: 20px;
-      margin: 0;
-      background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-      min-height: 100vh;
-      color: #2c3e50;
-      animation: fadeIn 0.8s ease-in;
-    }
-    h2 {
-      text-align: center;
-      color: #1b4f72;
-      font-size: 26px;
-      letter-spacing: 0.5px;
-      position: relative;
-    }
-    h2::after {
-      content: "";
-      display: block;
-      width: 60px;
-      height: 4px;
-      background: #3498db;
-      margin: 8px auto;
-      border-radius: 2px;
-      animation: growLine 1s ease;
-    }
-
-    #welcome, #lockMsg {
-      text-align: center;
-      font-size: 16px;
-      margin-bottom: 10px;
-    }
-    #lockMsg b { color: red; }
-
-    #teamSelectBox {
-      text-align: center;
-      margin: 15px 0 20px;
-    }
-
-    label {
-      font-weight: 600;
-      margin-right: 8px;
-    }
-
-    select {
-      padding: 8px 12px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      outline: none;
-      transition: 0.3s;
-      font-size: 15px;
-    }
-    select:focus {
-      border-color: #3498db;
-      box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
-    }
-
-    button {
-      padding: 8px 14px;
-      border-radius: 6px;
-      background: linear-gradient(90deg, #28a745, #2ecc71);
-      color: #fff;
-      border: none;
-      cursor: pointer;
-      font-weight: 500;
-      transition: 0.3s ease;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.15);
-    }
-    button:hover:not(:disabled) {
-      background: linear-gradient(90deg, #2ecc71, #28a745);
-      transform: scale(1.05);
-    }
-    button:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-      box-shadow: none;
-    }
-
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      margin-top: 20px;
-      border-radius: 10px;
-      overflow: hidden;
-      background: white;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      animation: slideUp 0.6s ease;
-    }
-    th, td {
-      border: 1px solid #e0e0e0;
-      padding: 10px;
-      text-align: center;
-      font-size: 14px;
-    }
-    thead tr:nth-child(1) th {
-      background: #3498db;
-      color: white;
-      font-weight: 600;
-    }
-    thead tr:nth-child(2) th {
-      background: #ecf0f1;
-      font-weight: normal;
-      font-size: 13px;
-    }
-
-    .total {
-      font-weight: bold;
-      color: #2e86c1;
-      animation: pop 0.3s ease;
-    }
-
-    /* Responsive Table */
-    @media (max-width: 768px) {
-      table { display: block; overflow-x: auto; white-space: nowrap; }
-      h2 { font-size: 22px; }
-      select, button { font-size: 14px; }
-      #welcome { font-size: 14px; }
-    }
-
-    /* Animations */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes growLine {
-      from { width: 0; }
-      to { width: 60px; }
-    }
-    @keyframes slideUp {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-    @keyframes pop {
-      0% { transform: scale(0.9); opacity: 0.6; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    /* Icon Styling */
-    .icon {
-      color: #2980b9;
-      margin-right: 6px;
-    }
-
+    body { font-family: Poppins, sans-serif; padding: 20px; }
+    select, button { padding: 8px; border-radius: 6px; border: 1px solid #ccc; }
+    button { background: #28a745; color: white; border: none; cursor: pointer; }
+    button:disabled { background: #ccc; cursor: not-allowed; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    #welcome { margin-bottom: 15px; font-weight: 500; color: #2c3e50; }
+    #teamSelectBox { margin: 10px 0; }
+    thead tr:nth-child(1) th { background-color: #f8f8f8; }
+    thead tr:nth-child(2) th { font-weight: normal; font-size: 13px; }
   </style>
 </head>
 <body onload="initFaculty()">
-  <h2><i class="fa-solid fa-user-pen icon"></i>Faculty - Mark Entry</h2>
+  <h2>Faculty - Mark Entry</h2>
   <div id="welcome"></div>
   <div id="lockMsg"></div>
 
   <div id="teamSelectBox">
-    <label><i class="fa-solid fa-people-group icon"></i><b>Select Team ID:</b></label>
-    <select id="teamSelect">
-      <option value="">-- Select Team --</option>
-    </select>
+    <label><b>Select Team ID:</b></label>
+    <select id="teamSelect"><option value="">-- Select Team --</option></select>
   </div>
 
   <table id="studentTable" style="display:none;">
@@ -189,145 +52,156 @@
   </table>
 
 <script>
-  /* --- Your original JavaScript (no logic change) --- */
-  const faculty_id = localStorage.getItem("faculty_id");
-  const venue = localStorage.getItem("venue");
-  const facultyName = localStorage.getItem("faculty_name");
-  const batch = localStorage.getItem("batch");
+const faculty_id = localStorage.getItem("faculty_id");
+const venue = localStorage.getItem("venue");
+const facultyName = localStorage.getItem("faculty_name");
+const batch = localStorage.getItem("batch");
 
-  const level1Marks = { "Excellent":10,"Good":8,"Average":6,"Poor":4 };
-  const level2Marks = { "Excellent":30,"Good":24,"Average":18,"Poor":12 };
+const level1Marks = { "Excellent":10,"Good":8,"Average":6,"Poor":4 };
+const level2Marks = { "Excellent":30,"Good":24,"Average":18,"Poor":12 };
 
-  let students = [], existingMarks = [], locked = false;
+let students = [], existingMarks = [], locked = false;
 
-  async function initFaculty() {
-    if (!faculty_id || !venue || !facultyName || !batch) {
-      alert("Unauthorized access! Please login again.");
-      window.location.href = "index.html"; return;
-    }
-
-    document.getElementById("welcome").innerHTML =
-      `<i class='fa-solid fa-user icon'></i>Welcome <b>${facultyName}</b> — 
-       <i class='fa-solid fa-location-dot icon'></i>Venue: <b>${venue}</b> — 
-       <i class='fa-solid fa-users-gear icon'></i>Batch: <b>${batch}</b>`;
-
-    const lockData = await postData("getLockStatus", { batch });
-    locked = (lockData.status === "Closed");
-    if (locked)
-      document.getElementById("lockMsg").innerHTML =
-        "<b><i class='fa-solid fa-lock icon'></i>Mark Entry Locked! You can only view marks.</b>";
-
-    const studentRes = await postData("getStudents", { venue, batch });
-    console.log("Student API response:", studentRes);
-
-    students = (Array.isArray(studentRes) ? studentRes : []).map(s => ({
-      teamId: s.teamid || "",
-      s1Id: s.student1_id || "",
-      s1Name: s.student1_name || "",
-      s2Id: s.student2_id || "",
-      s2Name: s.student2_name || "",
-      dept: s.dept || "",
-      title: s.title || ""
-    }));
-
-    if (!students.length) alert("No students found for this venue/batch.");
-
-    existingMarks = await postData("getFacultyMarks", { faculty_id, batch });
-    console.log("Existing marks:", existingMarks);
-
-    populateTeamDropdown();
+async function initFaculty() {
+  if (!faculty_id || !venue || !facultyName || !batch) {
+    alert("Unauthorized access! Please login again.");
+    window.location.href = "index.html"; return;
   }
 
-  function populateTeamDropdown() {
-    const teamSelect = document.getElementById("teamSelect");
-    teamSelect.innerHTML = `<option value="">-- Select Team --</option>`;
-    const uniqueTeams = [...new Set(students.map(s => s.teamId))];
-    uniqueTeams.forEach(tid => {
-      const opt = document.createElement("option");
-      opt.value = tid; opt.textContent = tid;
-      teamSelect.appendChild(opt);
-    });
-    teamSelect.onchange = handleTeamChange;
-  }
+  document.getElementById("welcome").innerHTML =
+    `Welcome <b>${facultyName}</b> — Venue: <b>${venue}</b> — Batch: <b>${batch}</b>`;
 
-  function handleTeamChange() {
-    const selectedTeam = document.getElementById("teamSelect").value;
-    const tbody = document.querySelector("#studentTable tbody"); 
-    tbody.innerHTML = "";
-    if (!selectedTeam) return document.getElementById("studentTable").style.display="none";
+  const lockData = await postData("getLockStatus", { batch });
+  locked = (lockData.status === "Closed");
+  if (locked)
+    document.getElementById("lockMsg").innerHTML =
+      "<b style='color:red;'>Mark Entry Locked! You can only view marks.</b>";
 
-    const teamStudents = students.filter(s => s.teamId === selectedTeam);
+  const studentRes = await postData("getStudents", { venue, batch });
+  console.log("Student API response:", studentRes);
 
-    teamStudents.forEach(st => {
-      if (st.s1Name) tbody.appendChild(createRow(st.teamId, st.s1Id, st.s1Name, st.dept, st.title));
-      if (st.s2Name) tbody.appendChild(createRow(st.teamId, st.s2Id, st.s2Name, st.dept, st.title));
-    });
+  // Normalize keys for consistent access
+  students = (Array.isArray(studentRes) ? studentRes : []).map(s => ({
+    teamId: s.teamid || "",
+    s1Id: s.student1_id || "",
+    s1Name: s.student1_name || "",
+    s2Id: s.student2_id || "",
+    s2Name: s.student2_name || "",
+    dept: s.dept || "",
+    title: s.title || ""
+}));
 
-    document.getElementById("studentTable").style.display = "table";
-  }
 
-  function createRow(team_id, student_id, student_name, dept, title) {
-    const existing = existingMarks.find(m => String(m.student_id).trim() === String(student_id).trim());
+  if (!students.length) alert("No students found for this venue/batch.");
 
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${team_id}</td>
-      <td>${student_name}</td>
-      <td>${dept}</td>
-      <td>${title}</td>
-      ${Array(4).fill('<td><select class="lvl1"><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option></select></td>').join('')}
-      ${Array(2).fill('<td><select class="lvl2"><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option></select></td>').join('')}
-      <td><span class="total">0</span></td>
-      <td><button><i class="fa-solid fa-floppy-disk"></i> Save</button></td>`;
+  existingMarks = await postData("getFacultyMarks", { faculty_id, batch });
+  console.log("Existing marks:", existingMarks);
 
-    const btn = row.querySelector("button");
-    const selects = row.querySelectorAll("select");
+  console.log("Normalized students:", students);
 
-    if(existing){
-      const l1vals = [existing.l1_1, existing.l1_2, existing.l1_3, existing.l1_4].map(v => Number(v)||0);
-      const l2vals = [existing.l2_1, existing.l2_2].map(v => Number(v)||0);
-      selects.forEach((sel, idx)=>{
-        if(idx<4) sel.value = getKeyByValue(level1Marks, l1vals[idx]);
-        else sel.value = getKeyByValue(level2Marks, l2vals[idx-4]);
-      });
-    }
+  populateTeamDropdown();
+}
 
-    updateTotal(row);
-    if (locked) btn.disabled = true;
-    else btn.onclick = () => saveMarks(row, team_id, student_id);
+function populateTeamDropdown() {
+  const teamSelect = document.getElementById("teamSelect");
+  teamSelect.innerHTML = `<option value="">-- Select Team --</option>`;
+  const uniqueTeams = [...new Set(students.map(s => s.teamId))];
+  uniqueTeams.forEach(tid => {
+    const opt = document.createElement("option"); opt.value = tid; opt.textContent = tid;
+    teamSelect.appendChild(opt);
+  });
+  teamSelect.onchange = handleTeamChange;
+}
 
-    selects.forEach(s => s.addEventListener("change", () => updateTotal(row)));
+function handleTeamChange() {
+  const selectedTeam = document.getElementById("teamSelect").value;
+  const tbody = document.querySelector("#studentTable tbody"); 
+  tbody.innerHTML = "";
+  if (!selectedTeam) return document.getElementById("studentTable").style.display="none";
 
-    return row;
-  }
+  const teamStudents = students.filter(s => s.teamId === selectedTeam);
+  console.log("Team Students:", teamStudents);
 
-  function getKeyByValue(obj,val){
-    val = Number(val);
-    return Object.keys(obj).find(k => obj[k] === val) || "Excellent";
-  }
+  teamStudents.forEach(st => {
+    if (st.s1Name) tbody.appendChild(createRow(st.teamId, st.s1Id, st.s1Name, st.dept, st.title));
+    if (st.s2Name) tbody.appendChild(createRow(st.teamId, st.s2Id, st.s2Name, st.dept, st.title));
+  });
 
-  function updateTotal(row){
-    const l1 = Array.from(row.querySelectorAll(".lvl1")).map(s=>level1Marks[s.value]);
-    const l2 = Array.from(row.querySelectorAll(".lvl2")).map(s=>level2Marks[s.value]);
-    row.querySelector(".total").textContent = l1.reduce((a,b)=>a+b,0) + l2.reduce((a,b)=>a+b,0);
-  }
+  document.getElementById("studentTable").style.display = "table";
+}
 
-  async function saveMarks(row,team_id,student_id){
-    const l1 = Array.from(row.querySelectorAll(".lvl1")).map(s=>level1Marks[s.value]);
-    const l2 = Array.from(row.querySelectorAll(".lvl2")).map(s=>level2Marks[s.value]);
-    const total = l1.reduce((a,b)=>a+b,0)+l2.reduce((a,b)=>a+b,0);
+function createRow(team_id, student_id, student_name, dept, title) {
+  const existing = existingMarks.find(m => String(m.student_id).trim() === String(student_id).trim())
 
-    await postData("saveMarks", {
-      faculty_id, team_id, student_id, batch,
-      student_name: row.children[1].textContent,
-      dept: row.children[2].textContent,
-      venue,
-      l1_1: l1[0], l1_2: l1[1], l1_3: l1[2], l1_4: l1[3],
-      l2_1: l2[0], l2_2: l2[1], total
-    });
+  console.log("student_id:", student_id, "existingMarks IDs:", existingMarks.map(m=>m.student_id));
 
-    alert(`Marks saved for ${student_id} (${batch} batch).`);
-  }
+  const row = document.createElement("tr");
+
+  row.innerHTML = `
+    <td>${team_id}</td>
+    <td>${student_name}</td>
+    <td>${dept}</td>
+    <td>${title}</td>
+    ${Array(4).fill('<td><select class="lvl1"><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option></select></td>').join('')}
+    ${Array(2).fill('<td><select class="lvl2"><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option></select></td>').join('')}
+    <td><span class="total">0</span></td>
+    <td><button>Save</button></td>`;
+
+  const btn = row.querySelector("button");
+  const selects = row.querySelectorAll("select");
+
+  // Pre-fill existing marks if available
+  if(existing){
+  const l1vals = [existing.l1_1, existing.l1_2, existing.l1_3, existing.l1_4].map(v => Number(v)||0);
+  const l2vals = [existing.l2_1, existing.l2_2].map(v => Number(v)||0);
+  selects.forEach((sel, idx)=>{
+    if(idx<4) sel.value = getKeyByValue(level1Marks, l1vals[idx]);
+    else sel.value = getKeyByValue(level2Marks, l2vals[idx-4]);
+  });
+}
+
+
+  // Update total after setting marks
+  updateTotal(row);
+
+  // Disable Save button if locked
+  if (locked) btn.disabled = true;
+  else btn.onclick = () => saveMarks(row, team_id, student_id);
+
+  selects.forEach(s => s.addEventListener("change", () => updateTotal(row)));
+
+  return row;
+}
+
+
+function getKeyByValue(obj,val){
+  val = Number(val);
+  return Object.keys(obj).find(k => obj[k] === val) || "Excellent";
+}
+
+
+function updateTotal(row){
+  const l1 = Array.from(row.querySelectorAll(".lvl1")).map(s=>level1Marks[s.value]);
+  const l2 = Array.from(row.querySelectorAll(".lvl2")).map(s=>level2Marks[s.value]);
+  row.querySelector(".total").textContent = l1.reduce((a,b)=>a+b,0) + l2.reduce((a,b)=>a+b,0);
+}
+
+async function saveMarks(row,team_id,student_id){
+  const l1 = Array.from(row.querySelectorAll(".lvl1")).map(s=>level1Marks[s.value]);
+  const l2 = Array.from(row.querySelectorAll(".lvl2")).map(s=>level2Marks[s.value]);
+  const total = l1.reduce((a,b)=>a+b,0)+l2.reduce((a,b)=>a+b,0);
+
+  await postData("saveMarks", {
+  faculty_id, team_id, student_id, batch,
+  student_name: row.children[1].textContent,
+  dept: row.children[2].textContent,
+  venue,
+  l1_1: l1[0], l1_2: l1[1], l1_3: l1[2], l1_4: l1[3],
+  l2_1: l2[0], l2_2: l2[1], total
+});
+
+  alert(`Marks saved for ${student_id} (${batch} batch).`);
+}
 </script>
 </body>
 </html>
