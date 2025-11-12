@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Venue Incharge - View Marks</title>
+  <script src="common.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+  <style>
+    body { font-family: Poppins, sans-serif; background: #f4f6fa; padding: 20px; }
+    .container {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      width: 95%;
+      max-width: 1100px;
+      margin: 30px auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 { color: #333; margin-bottom: 10px; }
+    select, button {
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-right: 10px;
+    }
+    button {
+      background: #4285f4;
+      color: white;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover { background: #357ae8; }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+      font-size: 14px;
+    }
+    
+    tr:nth-child(even) { background-color: #f9f9f9; }
+  </style>
+</head>
+<body onload="initVenueIncharge()">
+  <div class="container">
+    <h2>Venue Incharge Dashboard</h2>
+    <div id="welcome"></div><br>
+
+    <label for="batchSelect"><b>Select Batch:</b></label>
+    <select id="batchSelect">
+      <option value="">-- Select Batch --</option>
+      <option value="FN">FN</option>
+      <option value="AN">AN</option>
+    </select>
+    <button onclick="fetchVenueMarks()">View Marks</button>
+    <button onclick="downloadVenueReport()">Download PDF</button>
+
+    <table id="marksTable" style="display:none;">
+      <thead>
+        <tr>
+          <th>Faculty ID</th>
+          <th>Team ID</th>
+          <th>Student ID</th>
+          <th>Student Name</th>
+          <th>Dept</th>
+          <th>Venue</th>
+          <th>Level I - Problem</th>
+          <th>Level I - Methodology</th>
+          <th>Level I - Pictorial</th>
+          <th>Level I - Response</th>
+          <th>Level II - Determination</th>
+          <th>Level II - Communication</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    const faculty_id = localStorage.getItem("faculty_id");
+    const facultyName = localStorage.getItem("faculty_name");
+    const venue = localStorage.getItem("venue");
+    const role = localStorage.getItem("role");
+
+    function initVenueIncharge() {
+      if (!faculty_id || role !== "VenueIncharge") {
+        alert("Unauthorized access! Please login again.");
+        window.location.href = "index.html";
+        return;
+      }
+
+      document.getElementById("welcome").innerHTML =
+        `Welcome <b>${facultyName}</b> — Role: <b>${role}</b> — Venue: <b>${venue}</b>`;
+    }
+
+    async function fetchVenueMarks() {
+      const batch = document.getElementById("batchSelect").value;
+      if (!batch) {
+        alert("Please select a batch first!");
+        return;
+      }
+
+      // Get all faculty marks for this batch
+      const res = await postData("getVenueMarks", { batch });
+      console.log("All Marks:", res);
+
+      // Normalize marks array
+      const marks = Array.isArray(res) ? res : res.data || [];
+      const filtered = marks.filter(
+        m => (m.Venue || "").trim().toLowerCase() === venue.trim().toLowerCase()
+      );
+
+      const tbody = document.querySelector("#marksTable tbody");
+      tbody.innerHTML = "";
+
+      if (!filtered.length) {
+        tbody.innerHTML = `<tr><td colspan="13">No marks found for ${venue} (${batch})</td></tr>`;
+        document.getElementById("marksTable").style.display = "table";
+        return;
+      }
+
+      filtered.forEach(m => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${m.Faculty_ID || ""}</td>
+          <td>${m.TeamID || ""}</td>
+          <td>${m.Student_ID || ""}</td>
+          <td>${m.Student_Name || ""}</td>
+          <td>${m.Dept || ""}</td>
+          <td>${m.Venue || ""}</td>
+          <td>${m.LevelI_Problem || 0}</td>
+          <td>${m.LevelI_Methodology || 0}</td>
+          <td>${m.LevelI_Pictorial || 0}</td>
+          <td>${m.LevelI_Response || 0}</td>
+          <td>${m.LevelII_Determination || 0}</td>
+          <td>${m.LevelII_Communication || 0}</td>
+          <td>${m.Total || 0}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById("marksTable").style.display = "table";
+    }
+
+    async function getLogoData() {
+  const logoUrl = "logo.jpeg"; // make sure this path is correct
+  try {
+    const resp = await fetch(logoUrl);
+    if (!resp.ok) throw new Error("Logo not found");
+    const blob = await resp.blob();
+    const bitmap = await createImageBitmap(blob);
+    const canvas = document.createElement("canvas");
+    canvas.width = bitmap.width;
+    canvas.height = bitmap.height;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(bitmap, 0, 0);
+    return canvas.toDataURL("image/jpeg");
+  } catch (e) {
+    console.warn("Logo load failed:", e);
+    return null;
+  }
+}
+
+    async function downloadVenueReport() {
+      const batch = document.getElementById("batchSelect").value;
+      if (!batch) {
+        alert("Please select a batch first!");
+        return;
+      }
+
+      const res = await postData("getMarks", { batch });
+      const marks = Array.isArray(res) ? res : res.data || [];
+
+      const filtered = marks.filter(
+        m => (m.Venue || "").trim().toLowerCase() === venue.trim().toLowerCase()
+      );
+
+      if (!filtered.length) {
+        alert(`No marks found for ${venue} (${batch})`);
+        return;
+      }
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF("landscape", "pt", "a4");
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const logoData = await getLogoData();
+      const generatedDate = new Date().toLocaleString();
+
+      // ===== HEADER =====
+      doc.setFont("times", "bold");
+      doc.setFontSize(18);
+      doc.text("SEMINAR DAY EVALUATION REPORT", pageWidth / 2, 100, { align: "center" });
+      doc.setFontSize(12);
+      //doc.text(`Venue: ${venue}`, 60, 120);
+      doc.text(`Batch: ${batch}`, pageWidth - 120, 120);
+
+      // ===== TABLE =====
+      const head = [[
+        "Faculty ID", "Team ID", "Student ID", "Student Name", "Dept", "Venue",
+        "Level I - Problem", "Level I - Methodology", "Level I - Pictorial",
+        "Level I - Response", "Level II - Determination",
+        "Level II - Communication", "Total"
+      ]];
+
+      const body = filtered.map(m => [
+        m.Faculty_ID || "", m.TeamID || "", m.Student_ID || "",
+        m.Student_Name || "", m.Dept || "", m.Venue || "",
+        m.LevelI_Problem || 0, m.LevelI_Methodology || 0, m.LevelI_Pictorial || 0,
+        m.LevelI_Response || 0, m.LevelII_Determination || 0,
+        m.LevelII_Communication || 0, m.Total || 0
+      ]);
+
+      const headerHeight = 150;
+
+      doc.autoTable({
+        head: head,
+        body: body,
+        startY: headerHeight,
+        theme: "grid",
+        styles: {
+      font: "times",
+      fontSize: 10,
+      textColor: 0,
+      cellPadding: 4,
+      lineColor: 0,
+      lineWidth: 0.5,
+      halign: "center",
+      valign: "middle",
+    },
+    headStyles: {
+      fillColor: [255, 255, 255],
+      textColor: 0,
+      lineColor: 0,
+      lineWidth: 0.5,
+      halign: "center",
+      valign: "middle"
+    },
+    columnStyles: {
+      3: { halign: "left" }, // Student Name aligned left for readability
+    },
+        didDrawPage: function () {
+          if (logoData) {
+            const logoWidth = 250, logoHeight = 50;
+            doc.addImage(logoData, "JPEG", (pageWidth - logoWidth) / 2, 20, logoWidth, logoHeight);
+          }
+        },
+      });
+
+      const finalY = doc.lastAutoTable.finalY + 60;
+      doc.setFontSize(12);
+      doc.setFont("times", "bold");
+      doc.text("Venue Incharge Signature", pageWidth - 60, finalY + 80, { align: "right" });
+      doc.setFont("times", "normal");
+      doc.text(`Generated on: ${generatedDate}`, 630, pageHeight - 150);
+
+      // Save file
+      doc.save(`${venue}_${batch}_Seminar_Report.pdf`);
+    }
+
+  </script>
+</body>
+</html>

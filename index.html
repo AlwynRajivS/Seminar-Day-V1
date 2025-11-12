@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Seminar Mark System - Login</title>
+  <script src="common.js"></script>
+  <style>
+    body { font-family: Poppins, sans-serif; background: #f4f6fa; text-align: center; }
+    .login-box { margin: 100px auto; padding: 30px; width: 350px; background: #fff; border-radius: 12px; box-shadow: 0 0 10px #ccc; }
+    input, button { margin: 8px; padding: 10px; width: 80%; border-radius: 8px; border: 1px solid #ccc; }
+    button { background: #4285f4; color: white; font-weight: bold; border: none; }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h2>Seminar Day - Login</h2>
+    <input id="faculty_id" placeholder="Faculty ID" />
+    <input id="password" type="password" placeholder="Password" />
+    <button onclick="login()">Login</button>
+    <p id="msg"></p>
+  </div>
+
+  <script>
+    async function login() {
+      const id = document.getElementById("faculty_id").value;
+      const password = document.getElementById("password").value;
+      const msg = document.getElementById("msg");
+      msg.textContent = "Verifying...";
+      const res = await postData("login", { id, password });
+      if (res.status === "success") {
+        localStorage.setItem("faculty_id", res.faculty_id);
+        localStorage.setItem("venue", res.venue);
+        localStorage.setItem("role", res.role);
+        localStorage.setItem("faculty_name", res.faculty_name);
+        localStorage.setItem("batch", res.batch);
+        if (res.role === "Admin") {
+            window.location = "admin.html";
+          } else if (res.role === "VenueIncharge") {
+            window.location = "venue_incharge.html";
+          } else {
+            window.location = "faculty.html";
+          }
+        } else {
+          msg.textContent = "Invalid login credentials!";
+      } 
+    }
+  </script>
+</body>
+</html>
