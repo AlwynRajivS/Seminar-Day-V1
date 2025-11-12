@@ -1,197 +1,310 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Evaluation Table</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-<style>
-body {
-  background: linear-gradient(135deg, #e3f2fd, #f1f8e9);
-  font-family: 'Poppins', sans-serif;
-  padding: 20px;
-}
+  <meta charset="UTF-8">
+  <title>Faculty - Mark Entry</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="common.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
-.table-container {
-  background: white;
-  border-radius: 20px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-  overflow: hidden;
-  transition: transform 0.3s ease;
-}
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #e3f2fd, #e8f5e9);
+      padding: 20px;
+    }
 
-.table-container:hover {
-  transform: scale(1.01);
-}
+    h2 {
+      text-align: center;
+      color: #0077b6;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
 
-h2 {
-  text-align: center;
-  font-weight: 600;
-  color: #0077b6;
-  margin-bottom: 20px;
-}
+    #welcome {
+      font-weight: 500;
+      color: #2c3e50;
+      text-align: center;
+      margin-bottom: 10px;
+    }
 
-.table th {
-  background: #0077b6;
-  color: white;
-  text-align: center;
-}
+    #lockMsg {
+      text-align: center;
+      margin-bottom: 10px;
+      color: red;
+      font-weight: 600;
+    }
 
-.table td {
-  vertical-align: middle;
-  text-align: center;
-}
+    #teamSelectBox {
+      text-align: center;
+      margin: 20px 0;
+    }
 
-.btn-save {
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  padding: 6px 15px;
-  transition: all 0.3s;
-}
+    select, button {
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
 
-.btn-save:hover {
-  background-color: #43a047;
-  transform: scale(1.05);
-}
+    button {
+      background: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+    }
 
-/* --- Mobile View: Table becomes Card Layout --- */
-@media (max-width: 768px) {
-  table, thead, tbody, th, td, tr {
-    display: block;
-  }
+    button:hover:not(:disabled) {
+      background: #43a047;
+      transform: scale(1.05);
+    }
 
-  thead {
-    display: none;
-  }
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
 
-  tr {
-    margin-bottom: 20px;
-    background: #ffffff;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    padding: 15px;
-    animation: fadeInUp 0.5s ease;
-  }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 20px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      background: #fff;
+    }
 
-  td {
-    text-align: left !important;
-    padding: 10px 15px;
-    border: none !important;
-    position: relative;
-  }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+    }
 
-  td::before {
-    content: attr(data-label);
-    font-weight: 600;
-    color: #0077b6;
-    display: block;
-    margin-bottom: 4px;
-  }
+    th {
+      background: #0077b6;
+      color: white;
+      font-weight: 500;
+    }
 
-  .btn-save {
-    display: block;
-    width: 100%;
-    text-align: center;
-  }
-}
+    td select {
+      width: 100%;
+    }
 
-/* Animation */
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-</style>
+    /* ---------- Mobile Responsive (Card View) ---------- */
+    @media (max-width: 768px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tr {
+        background: #ffffff;
+        margin-bottom: 15px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        padding: 15px;
+        animation: fadeInUp 0.4s ease;
+      }
+
+      td {
+        text-align: left !important;
+        padding: 10px 15px;
+        border: none !important;
+      }
+
+      td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #0077b6;
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .btn {
+        width: 100%;
+        border-radius: 10px;
+        margin-top: 10px;
+      }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
-<body>
 
-<h2><i class="bi bi-clipboard2-check"></i> Project Evaluation Table</h2>
+<body onload="initFaculty()">
+  <h2><i class="bi bi-clipboard2-check"></i> Faculty - Mark Entry</h2>
+  <div id="welcome"></div>
+  <div id="lockMsg"></div>
 
-<div class="table-container p-3">
-  <table class="table table-bordered align-middle">
+  <div id="teamSelectBox">
+    <label><b>Select Team ID:</b></label>
+    <select id="teamSelect" class="form-select w-auto d-inline-block">
+      <option value="">-- Select Team --</option>
+    </select>
+  </div>
+
+  <table id="studentTable" style="display:none;">
     <thead>
       <tr>
-        <th>Team ID</th>
-        <th>Student Name</th>
-        <th>Department</th>
-        <th>Title</th>
+        <th rowspan="2">Team ID</th>
+        <th rowspan="2">Student Name</th>
+        <th rowspan="2">Department</th>
+        <th rowspan="2">Title</th>
         <th colspan="4">Level I (10 marks each)</th>
         <th colspan="2">Level II (30 marks each)</th>
-        <th>Total</th>
-        <th>Action</th>
+        <th rowspan="2">Total</th>
+        <th rowspan="2">Action</th>
       </tr>
       <tr>
-        <th colspan="4"></th>
         <th>Problem / Theme</th>
         <th>Methodology</th>
         <th>Explanation</th>
         <th>Queries</th>
         <th>Confidence</th>
         <th>Communication</th>
-        <th></th>
-        <th></th>
       </tr>
     </thead>
-
-    <tbody>
-      <tr>
-        <td data-label="Team ID">T002</td>
-        <td data-label="Student Name"><i class="bi bi-person-circle"></i> Anushaa P S</td>
-        <td data-label="Department">CSE</td>
-        <td data-label="Title"><i class="bi bi-cpu"></i> AI-Based Traffic Control</td>
-        <td data-label="Problem / Theme">
-          <select class="form-select form-select-sm"><option>I</option><option>Ex</option><option>G</option></select>
-        </td>
-        <td data-label="Methodology">
-          <select class="form-select form-select-sm"><option>Ex</option><option>G</option></select>
-        </td>
-        <td data-label="Explanation">
-          <select class="form-select form-select-sm"><option>E</option><option>G</option></select>
-        </td>
-        <td data-label="Queries">
-          <select class="form-select form-select-sm"><option>E</option><option>Ex</option></select>
-        </td>
-        <td data-label="Confidence">
-          <select class="form-select form-select-sm"><option>Gc</option><option>Ex</option></select>
-        </td>
-        <td data-label="Communication">
-          <select class="form-select form-select-sm"><option>Ex</option><option>G</option></select>
-        </td>
-        <td data-label="Total"><span class="badge bg-success fs-6">94</span></td>
-        <td data-label="Action"><button class="btn btn-save"><i class="bi bi-save2"></i> Save</button></td>
-      </tr>
-
-      <tr>
-        <td data-label="Team ID">T002</td>
-        <td data-label="Student Name"><i class="bi bi-person-circle"></i> Anu</td>
-        <td data-label="Department">CSE</td>
-        <td data-label="Title"><i class="bi bi-cpu"></i> AI-Based Traffic Control</td>
-        <td data-label="Problem / Theme">
-          <select class="form-select form-select-sm"><option>I</option><option>Ex</option><option>G</option></select>
-        </td>
-        <td data-label="Methodology">
-          <select class="form-select form-select-sm"><option>Ex</option><option>G</option></select>
-        </td>
-        <td data-label="Explanation">
-          <select class="form-select form-select-sm"><option>E</option><option>G</option></select>
-        </td>
-        <td data-label="Queries">
-          <select class="form-select form-select-sm"><option>A</option><option>G</option></select>
-        </td>
-        <td data-label="Confidence">
-          <select class="form-select form-select-sm"><option>Ex</option><option>Gc</option></select>
-        </td>
-        <td data-label="Communication">
-          <select class="form-select form-select-sm"><option>Ex</option><option>G</option></select>
-        </td>
-        <td data-label="Total"><span class="badge bg-success fs-6">96</span></td>
-        <td data-label="Action"><button class="btn btn-save"><i class="bi bi-save2"></i> Save</button></td>
-      </tr>
-    </tbody>
+    <tbody></tbody>
   </table>
-</div>
 
+<script>
+const faculty_id = localStorage.getItem("faculty_id");
+const venue = localStorage.getItem("venue");
+const facultyName = localStorage.getItem("faculty_name");
+const batch = localStorage.getItem("batch");
+
+const level1Marks = { "Excellent":10,"Good":8,"Average":6,"Poor":4 };
+const level2Marks = { "Excellent":30,"Good":24,"Average":18,"Poor":12 };
+
+let students = [], existingMarks = [], locked = false;
+
+async function initFaculty() {
+  if (!faculty_id || !venue || !facultyName || !batch) {
+    alert("Unauthorized access! Please login again.");
+    window.location.href = "index.html"; return;
+  }
+
+  document.getElementById("welcome").innerHTML =
+    `Welcome <b>${facultyName}</b> — Venue: <b>${venue}</b> — Batch: <b>${batch}</b>`;
+
+  const lockData = await postData("getLockStatus", { batch });
+  locked = (lockData.status === "Closed");
+  if (locked)
+    document.getElementById("lockMsg").innerHTML =
+      "<i class='bi bi-lock-fill'></i> Mark Entry Locked! You can only view marks.";
+
+  const studentRes = await postData("getStudents", { venue, batch });
+  students = (Array.isArray(studentRes) ? studentRes : []).map(s => ({
+    teamId: s.teamid || "",
+    s1Id: s.student1_id || "",
+    s1Name: s.student1_name || "",
+    s2Id: s.student2_id || "",
+    s2Name: s.student2_name || "",
+    dept: s.dept || "",
+    title: s.title || ""
+  }));
+
+  existingMarks = await postData("getFacultyMarks", { faculty_id, batch });
+  populateTeamDropdown();
+}
+
+function populateTeamDropdown() {
+  const teamSelect = document.getElementById("teamSelect");
+  teamSelect.innerHTML = `<option value="">-- Select Team --</option>`;
+  const uniqueTeams = [...new Set(students.map(s => s.teamId))];
+  uniqueTeams.forEach(tid => {
+    const opt = document.createElement("option");
+    opt.value = tid;
+    opt.textContent = tid;
+    teamSelect.appendChild(opt);
+  });
+  teamSelect.onchange = handleTeamChange;
+}
+
+function handleTeamChange() {
+  const selectedTeam = document.getElementById("teamSelect").value;
+  const tbody = document.querySelector("#studentTable tbody");
+  tbody.innerHTML = "";
+  if (!selectedTeam) return document.getElementById("studentTable").style.display="none";
+
+  const teamStudents = students.filter(s => s.teamId === selectedTeam);
+  teamStudents.forEach(st => {
+    if (st.s1Name) tbody.appendChild(createRow(st.teamId, st.s1Id, st.s1Name, st.dept, st.title));
+    if (st.s2Name) tbody.appendChild(createRow(st.teamId, st.s2Id, st.s2Name, st.dept, st.title));
+  });
+  document.getElementById("studentTable").style.display = "table";
+}
+
+function createRow(team_id, student_id, student_name, dept, title) {
+  const existing = existingMarks.find(m => String(m.student_id).trim() === String(student_id).trim());
+  const row = document.createElement("tr");
+
+  row.innerHTML = `
+    <td data-label="Team ID">${team_id}</td>
+    <td data-label="Student Name"><i class="bi bi-person-circle"></i> ${student_name}</td>
+    <td data-label="Department">${dept}</td>
+    <td data-label="Title"><i class="bi bi-cpu"></i> ${title}</td>
+    ${Array(4).fill('<td data-label="Level I"><select class="lvl1 form-select form-select-sm"><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option></select></td>').join('')}
+    ${Array(2).fill('<td data-label="Level II"><select class="lvl2 form-select form-select-sm"><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option></select></td>').join('')}
+    <td data-label="Total"><span class="badge bg-success total fs-6">0</span></td>
+    <td data-label="Action"><button class="btn"><i class="bi bi-save2"></i> Save</button></td>
+  `;
+
+  const btn = row.querySelector("button");
+  const selects = row.querySelectorAll("select");
+
+  if (existing) {
+    const l1vals = [existing.l1_1, existing.l1_2, existing.l1_3, existing.l1_4].map(v => Number(v)||0);
+    const l2vals = [existing.l2_1, existing.l2_2].map(v => Number(v)||0);
+    selects.forEach((sel, idx) => {
+      if (idx<4) sel.value = getKeyByValue(level1Marks, l1vals[idx]);
+      else sel.value = getKeyByValue(level2Marks, l2vals[idx-4]);
+    });
+  }
+
+  updateTotal(row);
+  if (locked) btn.disabled = true;
+  else btn.onclick = () => saveMarks(row, team_id, student_id);
+
+  selects.forEach(s => s.addEventListener("change", () => updateTotal(row)));
+  return row;
+}
+
+function getKeyByValue(obj, val) {
+  val = Number(val);
+  return Object.keys(obj).find(k => obj[k] === val) || "Excellent";
+}
+
+function updateTotal(row) {
+  const l1 = Array.from(row.querySelectorAll(".lvl1")).map(s=>level1Marks[s.value]);
+  const l2 = Array.from(row.querySelectorAll(".lvl2")).map(s=>level2Marks[s.value]);
+  row.querySelector(".total").textContent = l1.reduce((a,b)=>a+b,0) + l2.reduce((a,b)=>a+b,0);
+}
+
+async function saveMarks(row, team_id, student_id) {
+  const l1 = Array.from(row.querySelectorAll(".lvl1")).map(s=>level1Marks[s.value]);
+  const l2 = Array.from(row.querySelectorAll(".lvl2")).map(s=>level2Marks[s.value]);
+  const total = l1.reduce((a,b)=>a+b,0) + l2.reduce((a,b)=>a+b,0);
+
+  await postData("saveMarks", {
+    faculty_id, team_id, student_id, batch,
+    student_name: row.children[1].textContent,
+    dept: row.children[2].textContent,
+    venue,
+    l1_1: l1[0], l1_2: l1[1], l1_3: l1[2], l1_4: l1[3],
+    l2_1: l2[0], l2_2: l2[1], total
+  });
+
+  alert(`Marks saved for ${student_id} (${batch} batch).`);
+}
+</script>
 </body>
 </html>
