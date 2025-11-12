@@ -1,338 +1,346 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Faculty - Mark Entry</title>
-<script src="common.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <title>Faculty - Enter Marks</title>
+  <script src="common.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* Global Styles */
+    body {
+      font-family: 'Poppins', sans-serif;
+      padding: 15px;
+      margin: 0;
+      background: #f7f9fc;
+      color: #2c3e50;
+    }
 
-<style>
-/* ---------- Global ---------- */
-* { box-sizing: border-box; }
-body {
-  font-family: 'Poppins', sans-serif;
-  margin: 0;
-  padding: 0;
-  background: #f3f7fa;
-  color: #2c3e50;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+    h2 {
+      text-align: center;
+      color: #1e88e5;
+      margin-bottom: 15px;
+      font-size: 26px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      animation: fadeDown 0.6s ease;
+    }
 
-h2 {
-  width: 100%;
-  background: linear-gradient(90deg, #0078d7, #00bfa5);
-  color: #fff;
-  text-align: center;
-  padding: 14px 0;
-  font-size: 22px;
-  margin: 0;
-  letter-spacing: 0.5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
+    #welcome {
+      text-align: center;
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
 
-#welcome, #lockMsg {
-  text-align: center;
-  padding: 10px;
-  font-size: 15px;
-  line-height: 1.4;
-  width: 95%;
-  max-width: 700px;
-}
-#lockMsg b { color: red; }
+    #lockMsg {
+      text-align: center;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
 
-#teamSelectBox {
-  text-align: center;
-  margin: 10px 0;
-  width: 95%;
-  max-width: 700px;
-}
+    /* Dropdowns and Buttons */
+    select, button {
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      transition: 0.3s;
+    }
 
-label { font-weight: 600; margin-right: 5px; }
-select {
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 15px;
-  width: 70%;
-  max-width: 300px;
-  transition: 0.3s;
-}
-select:focus {
-  border-color: #0078d7;
-  box-shadow: 0 0 5px rgba(0,120,215,0.3);
-}
+    select:focus {
+      border-color: #1e88e5;
+      box-shadow: 0 0 5px rgba(30,136,229,0.3);
+      outline: none;
+    }
 
-button {
-  padding: 10px 14px;
-  border-radius: 8px;
-  border: none;
-  background: linear-gradient(90deg, #28a745, #20c997);
-  color: white;
-  font-weight: 500;
-  cursor: pointer;
-  font-size: 14px;
-  transition: 0.3s;
-}
-button:hover:not(:disabled) { transform: scale(1.05); }
-button:disabled { background: #ccc; cursor: not-allowed; }
+    button {
+      background: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.3s ease, transform 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
 
-.table-container {
-  width: 95%;
-  max-width: 1000px;
-  overflow-x: auto;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  margin-bottom: 40px;
-  animation: fadeIn 0.5s ease;
-}
+    button:hover {
+      background: #218838;
+      transform: scale(1.05);
+    }
 
-table {
-  border-collapse: collapse;
-  width: 100%;
-  min-width: 900px;
-}
-th, td {
-  border: 1px solid #e0e0e0;
-  padding: 8px;
-  text-align: center;
-  font-size: 13px;
-}
-thead tr:nth-child(1) th {
-  background: #0078d7;
-  color: white;
-  font-weight: 600;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-thead tr:nth-child(2) th {
-  background: #eaf4fb;
-  font-weight: normal;
-}
-.total {
-  font-weight: bold;
-  color: #0078d7;
-}
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
 
-@media (max-width: 768px) {
-  /* Convert table to card layout */
-  .table-container { overflow: visible; box-shadow: none; background: none; }
-  table, thead, tbody, th, td, tr { display: block; }
-  thead { display: none; }
+    /* Table (Desktop View) */
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 15px;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
 
-  tbody tr {
-    background: #fff;
-    margin: 12px 0;
-    border-radius: 10px;
-    padding: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    animation: slideUp 0.4s ease;
-  }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
 
-  tbody td {
-    border: none;
-    text-align: left;
-    padding: 6px 8px;
-    font-size: 14px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  tbody td::before {
-    content: attr(data-label);
-    font-weight: 600;
-    color: #555;
-    flex: 1;
-  }
+    thead {
+      background: #1e88e5;
+      color: white;
+    }
 
-  select { width: 55%; font-size: 14px; }
-  button { width: 100%; margin-top: 6px; }
-}
+    thead tr:nth-child(2) th {
+      background: #2196f3;
+      font-weight: normal;
+      font-size: 13px;
+    }
 
-/* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-</style>
+    /* Total column highlight */
+    .total {
+      font-weight: 600;
+      color: #1e88e5;
+    }
+
+    /* Mobile Responsive Cards */
+    @media screen and (max-width: 900px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tbody tr {
+        margin-bottom: 15px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        padding: 12px;
+      }
+
+      tbody td {
+        border: none;
+        text-align: left;
+        padding: 6px 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #1e88e5;
+      }
+
+      button {
+        width: 100%;
+        margin-top: 8px;
+      }
+
+      .total {
+        text-align: right;
+        font-size: 16px;
+      }
+    }
+
+    /* Animations */
+    tbody tr {
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 
 <body onload="initFaculty()">
-  <h2><i class="fa-solid fa-user-pen"></i> Faculty - Mark Entry</h2>
+  <h2><i class="fa-solid fa-user-tie"></i> Faculty - Mark Entry</h2>
   <div id="welcome"></div>
   <div id="lockMsg"></div>
 
-  <div id="teamSelectBox">
-    <label><i class="fa-solid fa-people-group"></i> Select Team ID:</label>
+  <div id="teamSelectBox" style="text-align:center;margin:15px 0;">
+    <label><b>Select Team ID:</b></label>
     <select id="teamSelect"><option value="">-- Select Team --</option></select>
   </div>
 
-  <div class="table-container">
-    <table id="studentTable" style="display:none;">
-      <thead>
-        <tr>
-          <th rowspan="2">Team ID</th>
-          <th rowspan="2">Student Name</th>
-          <th rowspan="2">Department</th>
-          <th rowspan="2">Title</th>
-          <th colspan="4">Level I (10 marks each)</th>
-          <th colspan="2">Level II (30 marks each)</th>
-          <th rowspan="2">Total</th>
-          <th rowspan="2">Action</th>
-        </tr>
-        <tr>
-          <th>Problem Statement / Theme</th>
-          <th>Methodology / Proposed Solution</th>
-          <th>Pictorial / Scientific Explanation</th>
-          <th>Responding to Queries</th>
-          <th>Determination / Confidence Level</th>
-          <th>Communication</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
+  <table id="studentTable" style="display:none;">
+    <thead>
+      <tr>
+        <th rowspan="2">Team ID</th>
+        <th rowspan="2">Student Name</th>
+        <th rowspan="2">Department</th>
+        <th rowspan="2">Title</th>
+        <th colspan="4">Level I (10 marks each)</th>
+        <th colspan="2">Level II (30 marks each)</th>
+        <th rowspan="2">Total</th>
+        <th rowspan="2">Action</th>
+      </tr>
+      <tr>
+        <th>Problem Statement / Theme</th>
+        <th>Methodology / Proposed Solution</th>
+        <th>Pictorial / Scientific Explanation</th>
+        <th>Responding to Queries</th>
+        <th>Determination / Confidence Level</th>
+        <th>Communication</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
-<script>
-/* ---------- Original JS (no logic change) ---------- */
-const faculty_id = localStorage.getItem("faculty_id");
-const venue = localStorage.getItem("venue");
-const facultyName = localStorage.getItem("faculty_name");
-const batch = localStorage.getItem("batch");
+  <script>
+    const faculty_id = localStorage.getItem("faculty_id");
+    const venue = localStorage.getItem("venue");
+    const facultyName = localStorage.getItem("faculty_name");
+    const batch = localStorage.getItem("batch");
 
-const level1Marks = { "Excellent":10,"Good":8,"Average":6,"Poor":4 };
-const level2Marks = { "Excellent":30,"Good":24,"Average":18,"Poor":12 };
+    const level1Marks = { "Excellent":10,"Good":8,"Average":6,"Poor":4 };
+    const level2Marks = { "Excellent":30,"Good":24,"Average":18,"Poor":12 };
 
-let students = [], existingMarks = [], locked = false;
+    let students = [], existingMarks = [], locked = false;
 
-async function initFaculty() {
-  if (!faculty_id || !venue || !facultyName || !batch) {
-    alert("Unauthorized access! Please login again.");
-    window.location.href = "index.html"; return;
-  }
+    async function initFaculty() {
+      if (!faculty_id || !venue || !facultyName || !batch) {
+        alert("Unauthorized access! Please login again.");
+        window.location.href = "index.html"; return;
+      }
 
-  document.getElementById("welcome").innerHTML =
-    `<i class='fa-solid fa-user'></i> Welcome <b>${facultyName}</b><br>
-     <i class='fa-solid fa-location-dot'></i> Venue: <b>${venue}</b> |
-     <i class='fa-solid fa-users'></i> Batch: <b>${batch}</b>`;
+      document.getElementById("welcome").innerHTML =
+        `Welcome <b>${facultyName}</b> — Venue: <b>${venue}</b> — Batch: <b>${batch}</b>`;
 
-  const lockData = await postData("getLockStatus", { batch });
-  locked = (lockData.status === "Closed");
-  if (locked)
-    document.getElementById("lockMsg").innerHTML =
-      "<b><i class='fa-solid fa-lock'></i> Mark Entry Locked! You can only view marks.</b>";
+      const lockData = await postData("getLockStatus", { batch });
+      locked = (lockData.status === "Closed");
+      if (locked)
+        document.getElementById("lockMsg").innerHTML =
+          "<b style='color:red;'>🔒 Mark Entry Locked! You can only view marks.</b>";
 
-  const studentRes = await postData("getStudents", { venue, batch });
-  students = (Array.isArray(studentRes) ? studentRes : []).map(s => ({
-    teamId: s.teamid || "",
-    s1Id: s.student1_id || "",
-    s1Name: s.student1_name || "",
-    s2Id: s.student2_id || "",
-    s2Name: s.student2_name || "",
-    dept: s.dept || "",
-    title: s.title || ""
-  }));
+      const studentRes = await postData("getStudents", { venue, batch });
+      students = (Array.isArray(studentRes) ? studentRes : []).map(s => ({
+        teamId: s.teamid || "",
+        s1Id: s.student1_id || "",
+        s1Name: s.student1_name || "",
+        s2Id: s.student2_id || "",
+        s2Name: s.student2_name || "",
+        dept: s.dept || "",
+        title: s.title || ""
+      }));
 
-  if (!students.length) alert("No students found for this venue/batch.");
-  existingMarks = await postData("getFacultyMarks", { faculty_id, batch });
-  populateTeamDropdown();
-}
+      existingMarks = await postData("getFacultyMarks", { faculty_id, batch });
+      populateTeamDropdown();
+    }
 
-function populateTeamDropdown() {
-  const teamSelect = document.getElementById("teamSelect");
-  teamSelect.innerHTML = `<option value="">-- Select Team --</option>`;
-  const uniqueTeams = [...new Set(students.map(s => s.teamId))];
-  uniqueTeams.forEach(tid => {
-    const opt = document.createElement("option");
-    opt.value = tid; opt.textContent = tid;
-    teamSelect.appendChild(opt);
-  });
-  teamSelect.onchange = handleTeamChange;
-}
+    function populateTeamDropdown() {
+      const teamSelect = document.getElementById("teamSelect");
+      teamSelect.innerHTML = `<option value="">-- Select Team --</option>`;
+      const uniqueTeams = [...new Set(students.map(s => s.teamId))];
+      uniqueTeams.forEach(tid => {
+        const opt = document.createElement("option");
+        opt.value = tid; opt.textContent = tid;
+        teamSelect.appendChild(opt);
+      });
+      teamSelect.onchange = handleTeamChange;
+    }
 
-function handleTeamChange() {
-  const selectedTeam = document.getElementById("teamSelect").value;
-  const tbody = document.querySelector("#studentTable tbody"); 
-  tbody.innerHTML = "";
-  if (!selectedTeam) return document.getElementById("studentTable").style.display="none";
+    function handleTeamChange() {
+      const selectedTeam = document.getElementById("teamSelect").value;
+      const tbody = document.querySelector("#studentTable tbody"); 
+      tbody.innerHTML = "";
+      if (!selectedTeam) return document.getElementById("studentTable").style.display="none";
 
-  const teamStudents = students.filter(s => s.teamId === selectedTeam);
-  teamStudents.forEach(st => {
-    if (st.s1Name) tbody.appendChild(createRow(st.teamId, st.s1Id, st.s1Name, st.dept, st.title));
-    if (st.s2Name) tbody.appendChild(createRow(st.teamId, st.s2Id, st.s2Name, st.dept, st.title));
-  });
-  document.getElementById("studentTable").style.display = "table";
-}
+      const teamStudents = students.filter(s => s.teamId === selectedTeam);
+      teamStudents.forEach(st => {
+        if (st.s1Name) tbody.appendChild(createRow(st.teamId, st.s1Id, st.s1Name, st.dept, st.title));
+        if (st.s2Name) tbody.appendChild(createRow(st.teamId, st.s2Id, st.s2Name, st.dept, st.title));
+      });
 
-function createRow(team_id, student_id, student_name, dept, title) {
-  const existing = existingMarks.find(m => String(m.student_id).trim() === String(student_id).trim());
-  const row = document.createElement("tr");
-  row.innerHTML = `
-    <td data-label="Team ID">${team_id}</td>
-    <td data-label="Student Name">${student_name}</td>
-    <td data-label="Department">${dept}</td>
-    <td data-label="Title">${title}</td>
-    ${Array(4).fill('<td data-label="Level I"><select class="lvl1"><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option></select></td>').join('')}
-    ${Array(2).fill('<td data-label="Level II"><select class="lvl2"><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option></select></td>').join('')}
-    <td data-label="Total"><span class="total">0</span></td>
-    <td data-label="Action"><button><i class="fa-solid fa-floppy-disk"></i> Save</button></td>`;
+      document.getElementById("studentTable").style.display = "table";
+    }
 
-  const btn = row.querySelector("button");
-  const selects = row.querySelectorAll("select");
+    function createRow(team_id, student_id, student_name, dept, title) {
+      const existing = existingMarks.find(m => String(m.student_id).trim() === String(student_id).trim());
+      const row = document.createElement("tr");
 
-  if(existing){
-    const l1vals = [existing.l1_1, existing.l1_2, existing.l1_3, existing.l1_4].map(v => Number(v)||0);
-    const l2vals = [existing.l2_1, existing.l2_2].map(v => Number(v)||0);
-    selects.forEach((sel, idx)=>{
-      if(idx<4) sel.value = getKeyByValue(level1Marks, l1vals[idx]);
-      else sel.value = getKeyByValue(level2Marks, l2vals[idx-4]);
-    });
-  }
+      row.innerHTML = `
+        <td>${team_id}</td>
+        <td>${student_name}</td>
+        <td>${dept}</td>
+        <td>${title}</td>
+        ${Array(4).fill('<td><select class="lvl1"><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option></select></td>').join('')}
+        ${Array(2).fill('<td><select class="lvl2"><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option></select></td>').join('')}
+        <td><span class="total">0</span></td>
+        <td><button><i class="fa-solid fa-floppy-disk"></i> Save</button></td>`;
 
-  updateTotal(row);
-  if (locked) btn.disabled = true;
-  else btn.onclick = () => saveMarks(row, team_id, student_id);
+      // Add data-labels for mobile card view
+      const headers = ["Team ID","Student Name","Department","Title",
+        "Problem Statement / Theme","Methodology / Proposed Solution",
+        "Pictorial / Scientific Explanation","Responding to Queries",
+        "Determination / Confidence Level","Communication","Total","Action"];
+      row.querySelectorAll("td").forEach((td,i)=> td.setAttribute("data-label", headers[i]));
 
-  selects.forEach(s => s.addEventListener("change", () => updateTotal(row)));
-  return row;
-}
+      const btn = row.querySelector("button");
+      const selects = row.querySelectorAll("select");
 
-function getKeyByValue(obj,val){
-  val = Number(val);
-  return Object.keys(obj).find(k => obj[k] === val) || "Excellent";
-}
+      if(existing){
+        const l1vals = [existing.l1_1, existing.l1_2, existing.l1_3, existing.l1_4].map(v => Number(v)||0);
+        const l2vals = [existing.l2_1, existing.l2_2].map(v => Number(v)||0);
+        selects.forEach((sel, idx)=>{
+          if(idx<4) sel.value = getKeyByValue(level1Marks, l1vals[idx]);
+          else sel.value = getKeyByValue(level2Marks, l2vals[idx-4]);
+        });
+      }
 
-function updateTotal(row){
-  const l1 = Array.from(row.querySelectorAll(".lvl1")).map(s=>level1Marks[s.value]);
-  const l2 = Array.from(row.querySelectorAll(".lvl2")).map(s=>level2Marks[s.value]);
-  row.querySelector(".total").textContent = l1.reduce((a,b)=>a+b,0) + l2.reduce((a,b)=>a+b,0);
-}
+      updateTotal(row);
+      if (locked) btn.disabled = true;
+      else btn.onclick = () => saveMarks(row, team_id, student_id);
+      selects.forEach(s => s.addEventListener("change", () => updateTotal(row)));
 
-async function saveMarks(row,team_id,student_id){
-  const l1 = Array.from(row.querySelectorAll(".lvl1")).map(s=>level1Marks[s.value]);
-  const l2 = Array.from(row.querySelectorAll(".lvl2")).map(s=>level2Marks[s.value]);
-  const total = l1.reduce((a,b)=>a+b,0)+l2.reduce((a,b)=>a+b,0);
-  await postData("saveMarks", {
-    faculty_id, team_id, student_id, batch,
-    student_name: row.children[1].textContent,
-    dept: row.children[2].textContent,
-    venue,
-    l1_1: l1[0], l1_2: l1[1], l1_3: l1[2], l1_4: l1[3],
-    l2_1: l2[0], l2_2: l2[1], total
-  });
-  alert(`Marks saved for ${student_id} (${batch} batch).`);
-}
-</script>
+      return row;
+    }
+
+    function getKeyByValue(obj,val){
+      val = Number(val);
+      return Object.keys(obj).find(k => obj[k] === val) || "Excellent";
+    }
+
+    function updateTotal(row){
+      const l1 = Array.from(row.querySelectorAll(".lvl1")).map(s=>level1Marks[s.value]);
+      const l2 = Array.from(row.querySelectorAll(".lvl2")).map(s=>level2Marks[s.value]);
+      row.querySelector(".total").textContent = l1.reduce((a,b)=>a+b,0) + l2.reduce((a,b)=>a+b,0);
+    }
+
+    async function saveMarks(row,team_id,student_id){
+      const l1 = Array.from(row.querySelectorAll(".lvl1")).map(s=>level1Marks[s.value]);
+      const l2 = Array.from(row.querySelectorAll(".lvl2")).map(s=>level2Marks[s.value]);
+      const total = l1.reduce((a,b)=>a+b,0)+l2.reduce((a,b)=>a+b,0);
+
+      await postData("saveMarks", {
+        faculty_id, team_id, student_id, batch,
+        student_name: row.children[1].textContent,
+        dept: row.children[2].textContent,
+        venue,
+        l1_1: l1[0], l1_2: l1[1], l1_3: l1[2], l1_4: l1[3],
+        l2_1: l2[0], l2_2: l2[1], total
+      });
+
+      alert(`Marks saved for ${student_id} (${batch} batch).`);
+    }
+  </script>
 </body>
 </html>
