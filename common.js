@@ -1,5 +1,5 @@
 // common.js
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxU4W9dnlDlBb4fdgYot8Ix795QICw76MqVzu8Hl6ulzfdm6eubdBhz3FMEFkiQshOLrw/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzTKcJuM36iKzdw30HSWg0zddLiJ_zQwrsSJgprx2FeE5-R6wXBQc8Npyv3EAniACZFpg/exec";
 
 /**
  * Universal API POST helper
@@ -30,6 +30,7 @@ async function postData(action, data = {}) {
     throw err;
   }
 }
+
 
 
 
